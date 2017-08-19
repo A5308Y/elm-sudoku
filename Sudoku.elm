@@ -19,12 +19,11 @@ initModel =
         "..18972462485619376794.385113578246946793512.89214637572631958.514278693983654712"
 
 
-
---Grid.empty
-
-
 view model =
-    div [] (Dict.values (Dict.map (fieldView model) model))
+    div []
+        [ button [ onClick Solve ] [ text "Solve" ]
+        , div [] (Dict.values (Dict.map (fieldView model) model))
+        ]
 
 
 fieldView model position state =
@@ -97,6 +96,7 @@ fieldStyle ( xPosition, yPosition ) backgroundColor =
 type Msg
     = SetEditing Position State
     | SetNumber Position String
+    | Solve
 
 
 update msg model =
@@ -129,6 +129,12 @@ update msg model =
 
                 _ ->
                     model
+
+        Solve ->
+            model
+                |> Solver.solve
+                |> List.head
+                |> Maybe.withDefault Grid.empty
 
 
 boxSize =
