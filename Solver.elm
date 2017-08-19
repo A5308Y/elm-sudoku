@@ -1,6 +1,6 @@
 module Solver exposing (hasAnyError, hasError, possibleBoards, solve)
 
-import Dict
+import Dict exposing (Dict)
 import Types exposing (..)
 
 
@@ -43,6 +43,7 @@ possibleBoards board numbersLeft position =
         |> List.map (\number -> Dict.insert position (PreFilled number) board)
 
 
+numbersLeftMapper : List a -> a -> ( a, Int )
 numbersLeftMapper numbersPresent numberInField =
     let
         matchingNumbers =
@@ -51,6 +52,7 @@ numbersLeftMapper numbersPresent numberInField =
     ( numberInField, 9 - List.length matchingNumbers )
 
 
+filledOutFieldFilter : a -> State -> Bool
 filledOutFieldFilter _ state =
     case state of
         PreFilled _ ->
@@ -63,6 +65,7 @@ filledOutFieldFilter _ state =
             False
 
 
+stateToNumberMapper : State -> Maybe Int
 stateToNumberMapper state =
     case state of
         UserFilled number ->
@@ -94,20 +97,24 @@ hasAnyError board =
         |> List.any identity
 
 
+hasError : Dict.Dict ( Int, Int ) State -> ( Int, Int ) -> Int -> Bool
 hasError model position number =
     isDuplicatePresent number (findColumn model position)
         || isDuplicatePresent number (findRow model position)
         || isDuplicatePresent number (findBox model position)
 
 
+findColumn : Board -> Position -> Dict Position State
 findColumn model ( givenXPosition, givenYPosition ) =
     Dict.filter (\( xPosition, yPosition ) _ -> xPosition == givenXPosition) model
 
 
+findRow : Board -> Position -> Dict Position State
 findRow model ( givenXPosition, givenYPosition ) =
     Dict.filter (\( xPosition, yPosition ) _ -> yPosition == givenYPosition) model
 
 
+findBox : Board -> Position -> Dict Position State
 findBox model ( givenXPosition, givenYPosition ) =
     Dict.filter
         (\( xPosition, yPosition ) _ ->
@@ -117,17 +124,20 @@ findBox model ( givenXPosition, givenYPosition ) =
         model
 
 
+isDuplicatePresent : Int -> Dict.Dict Position State -> Bool
 isDuplicatePresent givenNumber fields =
     let
         numberCount =
             fields
-                |> Dict.filter (numberPresentInField givenNumber)
-                |> Dict.size
+                |> Dict.values
+                |> List.filter (numberPresentInField givenNumber)
+                |> List.length
     in
     numberCount > 1
 
 
-numberPresentInField givenNumber _ state =
+numberPresentInField : Int -> State -> Bool
+numberPresentInField givenNumber state =
     case state of
         UserFilled number ->
             givenNumber == number
