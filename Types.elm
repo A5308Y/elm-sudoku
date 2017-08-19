@@ -14,5 +14,9 @@ type State
     | Editing (Maybe Int)
 
 
-type alias Model =
+type alias Board =
     Dict Position State
+
+
+type alias Model =
+    Board
