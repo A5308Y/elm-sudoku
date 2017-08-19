@@ -4,7 +4,7 @@ import Dict
 import Types exposing (..)
 
 
-solve : Board -> Maybe Board
+solve : Board -> List Board
 solve board =
     let
         numbersPresent =
@@ -24,21 +24,23 @@ solve board =
             board
                 |> Dict.filter (\_ state -> state == Empty)
                 |> Dict.keys
+
+        correctBoards =
+            fieldsLeft
+                |> List.concatMap (possibleBoards board (Dict.keys numbersLeftDict))
+                |> List.filter (not << hasAnyError)
     in
-    fieldsLeft
-        |> List.concatMap (possibleBoards board (Dict.keys numbersLeftDict))
-        |> List.filter (not << hasAnyError)
-        |> List.head
+    if List.length fieldsLeft == 1 then
+        correctBoards
+    else
+        correctBoards
+            |> List.concatMap solve
 
 
 possibleBoards : Board -> List Int -> Position -> List Board
 possibleBoards board numbersLeft position =
     numbersLeft
-        |> List.map (\number -> Dict.insert position (UserFilled number) board)
-
-
-
---try out one number in one field -> is there an error? -> try next number, then next field
+        |> List.map (\number -> Dict.insert position (PreFilled number) board)
 
 
 numbersLeftMapper numbersPresent numberInField =
@@ -73,6 +75,7 @@ stateToNumberMapper state =
             Nothing
 
 
+hasAnyError : Board -> Bool
 hasAnyError board =
     Dict.map
         (\position state ->
