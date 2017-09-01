@@ -1,21 +1,30 @@
 module Types exposing (..)
 
+import Array exposing (Array)
 import Dict exposing (Dict)
 
 
-type alias Position =
-    ( Int, Int )
+type Number
+    = One
+    | Two
+    | Three
+    | Four
+    | Five
+    | Six
+    | Seven
+    | Eight
+    | Nine
 
 
-type State
-    = PreFilled Int
-    | UserFilled Int
+type FieldState
+    = PreFilled Number
+    | UserFilled Number
     | Empty
-    | Editing (Maybe Int)
+    | Editing (Maybe Number)
 
 
 type alias Board =
-    Dict Position State
+    Array FieldState
 
 
 type alias Model =

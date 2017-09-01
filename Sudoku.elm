@@ -1,59 +1,67 @@
 module Main exposing (..)
 
-import Dict
-import Grid
+import Array
+import Board
+import Char
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Solver exposing (hasError)
+import Solver
 import Types exposing (..)
 
 
+main : Program Never Model Msg
 main =
     beginnerProgram { model = initModel, view = view, update = update }
 
 
 initModel : Model
 initModel =
-    Grid.fromNotation
-        "..18972462485619376794.385113578246946793512.89214637572631958.514278693983654712"
+    Board.solvableBoard
+        |> Board.fromNotation
 
 
+
+--Board.fromNotation
+--    "..18972462485619376794.385113578246946793512.89214637572631958.514278693983654712"
+
+
+view : Model -> Html Msg
 view model =
     div []
         [ button [ onClick Solve ] [ text "Solve" ]
-        , div [] (Dict.values (Dict.map (fieldView model) model))
+        , div [] (Array.toList (Array.indexedMap (renderField model) model))
+        , text (toString (Solver.solve model))
         ]
 
 
-fieldView model position state =
+renderField : Model -> Int -> FieldState -> Html Msg
+renderField model index state =
     case state of
         Empty ->
-            div [ fieldStyle position "white", onClick (SetEditing position state) ] []
+            div [ fieldStyle index "white", onClick (SetEditing index state) ] []
 
         PreFilled number ->
-            let
-                backgroundColor =
-                    if hasError model position number then
-                        "red"
-                    else
-                        "grey"
-            in
             div
-                [ fieldStyle position backgroundColor ]
+                [ fieldStyle index "grey" ]
                 [ text (toString number) ]
 
         UserFilled number ->
             let
                 backgroundColor =
-                    if hasError model position number then
-                        "red"
-                    else
-                        "white"
+                    case Array.get index (Board.errors model) of
+                        Nothing ->
+                            "white"
+
+                        Just hasError ->
+                            if hasError then
+                                "red"
+                            else
+                                "white"
             in
             div
-                [ fieldStyle position backgroundColor, onClick (SetEditing position state) ]
-                [ text (toString number) ]
+                [ fieldStyle index backgroundColor, onClick (SetEditing index state) ]
+                [ text (toString number), text (toString index) ]
 
         Editing maybeNumber ->
             let
@@ -66,10 +74,10 @@ fieldView model position state =
                             [ value (toString number) ]
             in
             div
-                [ fieldStyle position "white" ]
+                [ fieldStyle index "white" ]
                 [ input
                     (valueAttribute
-                        ++ [ onInput (SetNumber position)
+                        ++ [ onInput (SetNumber index)
                            , style [ ( "width", "20px" ) ]
                            , autofocus True
                            ]
@@ -78,7 +86,12 @@ fieldView model position state =
                 ]
 
 
-fieldStyle ( xPosition, yPosition ) backgroundColor =
+fieldStyle : Int -> String -> Attribute Msg
+fieldStyle index backgroundColor =
+    let
+        ( xPosition, yPosition ) =
+            Board.positionFromIndex index
+    in
     style
         [ ( "width", toString boxSize ++ "px" )
         , ( "height", toString boxSize ++ "px" )
@@ -94,48 +107,58 @@ fieldStyle ( xPosition, yPosition ) backgroundColor =
 
 
 type Msg
-    = SetEditing Position State
-    | SetNumber Position String
+    = SetEditing Int FieldState
+    | SetNumber Int String
     | Solve
 
 
+update : Msg -> Model -> Model
 update msg model =
     case msg of
-        SetNumber position numberInput ->
-            case String.toInt numberInput of
-                Ok number ->
-                    if number <= 9 && number >= 1 then
-                        model
-                            |> Dict.insert position (UserFilled number)
+        SetNumber index numberInput ->
+            case String.toList numberInput of
+                [ char ] ->
+                    if Char.isDigit char then
+                        case Board.charToNumber char of
+                            Nothing ->
+                                model
+
+                            Just number ->
+                                model
+                                    |> Array.set index (UserFilled number)
                     else
                         model
+                            |> Array.set index Empty
 
-                Err _ ->
+                _ ->
                     model
+                        |> Array.set index Empty
 
-        SetEditing position state ->
+        SetEditing index state ->
             case state of
                 PreFilled number ->
                     model
-                        |> Dict.insert position (Editing (Just number))
+                        |> Array.set index (Editing (Just number))
 
                 UserFilled number ->
                     model
-                        |> Dict.insert position (Editing (Just number))
+                        |> Array.set index (Editing (Just number))
 
                 Empty ->
                     model
-                        |> Dict.insert position (Editing Nothing)
+                        |> Array.set index (Editing Nothing)
 
                 _ ->
                     model
 
         Solve ->
             model
-                |> Solver.solve
-                |> List.head
-                |> Maybe.withDefault Grid.empty
 
 
+
+--Solver.solve model
+
+
+boxSize : number
 boxSize =
     50
