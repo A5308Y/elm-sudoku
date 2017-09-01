@@ -17,13 +17,13 @@ main =
 
 initModel : Model
 initModel =
-    Board.solvableBoard
-        |> Board.fromNotation
+    Board.fromNotation
+        "..18972462485619376794.3851.3578246946793512.89214637572631958.514278693983654712"
 
 
 
---Board.fromNotation
---    "..18972462485619376794.385113578246946793512.89214637572631958.514278693983654712"
+--Board.solvableBoard
+--|> Board.fromNotation
 
 
 view : Model -> Html Msg
@@ -31,7 +31,6 @@ view model =
     div []
         [ button [ onClick Solve ] [ text "Solve" ]
         , div [] (Array.toList (Array.indexedMap (renderField model) model))
-        , text (toString (Solver.solve model))
         ]
 
 
@@ -153,10 +152,9 @@ update msg model =
 
         Solve ->
             model
-
-
-
---Solver.solve model
+                |> Solver.solve
+                |> List.head
+                |> Maybe.withDefault Board.empty
 
 
 boxSize : number
