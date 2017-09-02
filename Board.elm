@@ -4,7 +4,7 @@ import Array
 import Types exposing (..)
 
 
-empty : Model
+empty : Board
 empty =
     Array.repeat 81 Empty
 

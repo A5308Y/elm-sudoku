@@ -6,18 +6,24 @@ import Char
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Keyboard
 import Solver
 import Types exposing (..)
 
 
 main : Program Never Model Msg
 main =
-    beginnerProgram { model = initModel, view = view, update = update }
+    program
+        { init = ( initModel, Cmd.none )
+        , view = view
+        , update = update
+        , subscriptions = subscriptions
+        }
 
 
 initModel : Model
 initModel =
-    Board.solveTest
+    { editing = Nothing, board = Board.solveTest }
 
 
 view : Model -> Html Msg
@@ -25,7 +31,7 @@ view model =
     div []
         [ button [ onClick Solve ] [ text "Solve" ]
         , button [ onClick Clear ] [ text "Clear" ]
-        , div [] (Array.toList (Array.indexedMap (renderField model) model))
+        , div [] (Array.toList (Array.indexedMap (renderField model) model.board))
         ]
 
 
@@ -33,7 +39,19 @@ renderField : Model -> Int -> FieldState -> Html Msg
 renderField model index state =
     case state of
         Empty ->
-            div [ fieldStyle index "white", onClick (SetEditing index state) ] []
+            let
+                backgroundColor =
+                    case model.editing of
+                        Nothing ->
+                            "white"
+
+                        Just editedIndex ->
+                            if editedIndex == index then
+                                "green"
+                            else
+                                "white"
+            in
+            div [ fieldStyle index backgroundColor, onClick (SetEditing index) ] []
 
         PreFilled number ->
             div
@@ -43,7 +61,7 @@ renderField model index state =
         UserFilled number ->
             let
                 backgroundColor =
-                    case Array.get index (Board.errors model) of
+                    case Array.get index (Board.errors model.board) of
                         Nothing ->
                             "white"
 
@@ -51,33 +69,19 @@ renderField model index state =
                             if hasError then
                                 "red"
                             else
-                                "white"
+                                case model.editing of
+                                    Nothing ->
+                                        "white"
+
+                                    Just editedIndex ->
+                                        if editedIndex == index then
+                                            "green"
+                                        else
+                                            "white"
             in
             div
-                [ fieldStyle index backgroundColor, onClick (SetEditing index state) ]
+                [ fieldStyle index backgroundColor, onClick (SetEditing index) ]
                 [ text (Board.numberToString number) ]
-
-        Editing maybeNumber ->
-            let
-                valueAttribute =
-                    case maybeNumber of
-                        Nothing ->
-                            []
-
-                        Just number ->
-                            [ value (Board.numberToString number) ]
-            in
-            div
-                [ fieldStyle index "white" ]
-                [ input
-                    (valueAttribute
-                        ++ [ onInput (SetNumber index)
-                           , style [ ( "width", "20px" ) ]
-                           , autofocus True
-                           ]
-                    )
-                    []
-                ]
 
 
 fieldStyle : Int -> String -> Attribute Msg
@@ -101,68 +105,70 @@ fieldStyle index backgroundColor =
 
 
 type Msg
-    = SetEditing Int FieldState
-    | SetNumber Int String
+    = SetEditing Int
     | Solve
     | Clear
+    | KeyPressed Char
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
+    let
+        board =
+            model.board
+    in
     case msg of
-        SetNumber index numberInput ->
-            case String.toList numberInput of
-                [ char ] ->
-                    if Char.isDigit char then
-                        case Board.charToNumber char of
-                            Nothing ->
-                                model
+        KeyPressed char ->
+            case model.editing of
+                Nothing ->
+                    ( model, Cmd.none )
 
-                            Just number ->
-                                model
-                                    |> Array.set index (UserFilled number)
-                    else
-                        model
-                            |> Array.set index Empty
+                Just index ->
+                    ( { model | board = setNumber board index char }, Cmd.none )
 
-                _ ->
-                    model
-                        |> Array.set index Empty
-
-        SetEditing index state ->
-            case state of
-                PreFilled number ->
-                    model
-                        |> Array.set index (Editing (Just number))
-
-                UserFilled number ->
-                    model
-                        |> Array.set index (Editing (Just number))
-
-                Empty ->
-                    model
-                        |> Array.set index (Editing Nothing)
-
-                _ ->
-                    model
+        SetEditing index ->
+            ( { model | editing = Just index }, Cmd.none )
 
         Solve ->
-            [ model ]
-                |> Solver.solve
-                |> List.head
-                |> Maybe.withDefault Board.empty
+            let
+                updatedBoard =
+                    [ board ]
+                        |> Solver.solve
+                        |> List.head
+                        |> Maybe.withDefault Board.empty
+            in
+            ( { model | board = updatedBoard }, Cmd.none )
 
         Clear ->
-            model
-                |> Array.map
-                    (\entry ->
-                        case entry of
-                            PreFilled _ ->
-                                entry
+            let
+                updatedBoard =
+                    board
+                        |> Array.map
+                            (\entry ->
+                                case entry of
+                                    PreFilled _ ->
+                                        entry
 
-                            _ ->
-                                Empty
-                    )
+                                    _ ->
+                                        Empty
+                            )
+            in
+            ( { model | board = updatedBoard }, Cmd.none )
+
+
+setNumber : Board -> Int -> Char -> Board
+setNumber board index numberInput =
+    if Char.isDigit numberInput then
+        case Board.charToNumber numberInput of
+            Nothing ->
+                board
+
+            Just number ->
+                board
+                    |> Array.set index (UserFilled number)
+    else
+        board
+            |> Array.set index Empty
 
 
 boxSize : number
@@ -170,5 +176,11 @@ boxSize =
     50
 
 
+positionFromIndex : Int -> ( Int, Int )
 positionFromIndex index =
     ( rem index 9 + 1, (index // 9) + 1 )
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Keyboard.presses (\code -> KeyPressed (Char.fromCode code))

@@ -71,10 +71,6 @@ possibleNumbersForIndex board index fieldState =
             validEntries
                 |> List.filter (numberNotTaken board index)
 
-        Editing _ ->
-            validEntries
-                |> List.filter (numberNotTaken board index)
-
         _ ->
             []
 

@@ -1,7 +1,6 @@
 module Types exposing (..)
 
 import Array exposing (Array)
-import Dict exposing (Dict)
 
 
 type Number
@@ -20,7 +19,6 @@ type FieldState
     = PreFilled Number
     | UserFilled Number
     | Empty
-    | Editing (Maybe Number)
 
 
 type alias Board =
@@ -28,4 +26,4 @@ type alias Board =
 
 
 type alias Model =
-    Board
+    { editing : Maybe Int, board : Board }
