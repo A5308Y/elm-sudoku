@@ -5,18 +5,31 @@ import Board
 import Types exposing (..)
 
 
-solve : Board -> List Board
-solve board =
-    Array.foldr solveOnce [] (possibleBoards board)
+solve : List Board -> List Board
+solve boards =
+    let
+        firstBoard =
+            List.head boards
 
+        debug =
+            case firstBoard of
+                Nothing ->
+                    ""
 
-solveOnce : Board -> List Board -> List Board
-solveOnce board solutions =
-    if isSolution board then
-        board
-            |> List.singleton
-    else
-        solve board
+                Just board ->
+                    Debug.log "checking board" (Board.toNotation board)
+    in
+    case firstBoard of
+        Nothing ->
+            []
+
+        Just board ->
+            if isSolution board then
+                [ board ]
+            else
+                board
+                    |> possibleBoards
+                    |> solve
 
 
 isSolution : Board -> Bool
@@ -24,16 +37,17 @@ isSolution board =
     List.all (\field -> field /= Empty) (Array.toList board)
 
 
-possibleBoards : Board -> Array.Array Board
+possibleBoards : Board -> List Board
 possibleBoards board =
     board
         |> possibleNumbersByIndex
-        |> Array.indexedMap (nextPossibleNumbers board)
+        |> Array.indexedMap (fillNumberFromPossibleNumbers board)
         |> Array.filter (\board -> possibleNumbersByIndex board /= Array.empty)
+        |> Array.toList
 
 
-nextPossibleNumbers : Board -> Int -> List (Maybe Number) -> Board
-nextPossibleNumbers board index possibleNumbers =
+fillNumberFromPossibleNumbers : Board -> Int -> List (Maybe Number) -> Board
+fillNumberFromPossibleNumbers board index possibleNumbers =
     case List.head possibleNumbers of
         Nothing ->
             Array.empty

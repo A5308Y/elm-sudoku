@@ -1,4 +1,4 @@
-module Board exposing (charToFieldState, charToNumber, empty, errors, fromNotation, numbersToCheck, solvableBoard)
+module Board exposing (charToFieldState, charToNumber, empty, errors, fromNotation, numberToString, numbersToCheck, solvable, solveTest, toNotation)
 
 import Array
 import Types exposing (..)
@@ -17,14 +17,30 @@ fromNotation boardCode =
         |> Array.map charToFieldState
 
 
-solvableBoard : String
-solvableBoard =
-    "....9......8....3767.4..8...3..8246...........9214..7...6..9.8451....6......5...."
+toNotation : Board -> String
+toNotation board =
+    board
+        |> Array.map fieldStateToString
+        |> Array.toList
+        |> String.concat
 
 
-solvedBoard : String
-solvedBoard =
-    "351897246248561937679423851135782469467935128892146375726319584514278693983654712"
+solveTest : Board
+solveTest =
+    fromNotation
+        "..189..4.2.8.619....94.3.51.3..824...67...12.8.21........3.9.8.514........36..712"
+
+
+solvable : Board
+solvable =
+    fromNotation
+        "....9......8....3767.4..8...3..8246...........9214..7...6..9.8451....6......5...."
+
+
+solved : Board
+solved =
+    fromNotation
+        "351897246248561937679423851135782469467935128892146375726319584514278693983654712"
 
 
 charToFieldState : Char -> FieldState
@@ -35,6 +51,19 @@ charToFieldState char =
 
         Just number ->
             PreFilled number
+
+
+fieldStateToString : FieldState -> String
+fieldStateToString state =
+    case state of
+        UserFilled number ->
+            numberToString number
+
+        PreFilled number ->
+            numberToString number
+
+        _ ->
+            "."
 
 
 charToNumber : Char -> Maybe Number
@@ -166,3 +195,34 @@ boxIndexes index =
     , boxStartIndex + 19
     , boxStartIndex + 20
     ]
+
+
+numberToString : Number -> String
+numberToString number =
+    case number of
+        One ->
+            "1"
+
+        Two ->
+            "2"
+
+        Three ->
+            "3"
+
+        Four ->
+            "4"
+
+        Five ->
+            "5"
+
+        Six ->
+            "6"
+
+        Seven ->
+            "7"
+
+        Eight ->
+            "8"
+
+        Nine ->
+            "9"

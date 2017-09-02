@@ -17,13 +17,7 @@ main =
 
 initModel : Model
 initModel =
-    Board.fromNotation
-        "..1897246248.619376794.3851.3578246946793512.89214637572631958.514278693983654712"
-
-
-
---Board.solvableBoard
---|> Board.fromNotation
+    Board.solveTest
 
 
 view : Model -> Html Msg
@@ -43,7 +37,7 @@ renderField model index state =
         PreFilled number ->
             div
                 [ fieldStyle index "grey" ]
-                [ text (numberToString number) ]
+                [ text (Board.numberToString number) ]
 
         UserFilled number ->
             let
@@ -60,7 +54,7 @@ renderField model index state =
             in
             div
                 [ fieldStyle index backgroundColor, onClick (SetEditing index state) ]
-                [ text (numberToString number) ]
+                [ text (Board.numberToString number) ]
 
         Editing maybeNumber ->
             let
@@ -70,7 +64,7 @@ renderField model index state =
                             []
 
                         Just number ->
-                            [ value (numberToString number) ]
+                            [ value (Board.numberToString number) ]
             in
             div
                 [ fieldStyle index "white" ]
@@ -151,7 +145,7 @@ update msg model =
                     model
 
         Solve ->
-            model
+            [ model ]
                 |> Solver.solve
                 |> List.head
                 |> Maybe.withDefault Board.empty
@@ -160,37 +154,6 @@ update msg model =
 boxSize : number
 boxSize =
     50
-
-
-numberToString : Number -> String
-numberToString number =
-    case number of
-        One ->
-            "1"
-
-        Two ->
-            "2"
-
-        Three ->
-            "3"
-
-        Four ->
-            "4"
-
-        Five ->
-            "5"
-
-        Six ->
-            "6"
-
-        Seven ->
-            "7"
-
-        Eight ->
-            "8"
-
-        Nine ->
-            "9"
 
 
 positionFromIndex index =
