@@ -34,7 +34,9 @@ solve boards =
 
 isSolution : Board -> Bool
 isSolution board =
-    List.all (\field -> field /= Empty) (Array.toList board)
+    board
+        |> Array.toList
+        |> List.all (\field -> field /= Empty)
 
 
 possibleBoards : Board -> List Board
@@ -79,7 +81,7 @@ possibleNumbersForIndex board index fieldState =
 
 numberNotTaken : Board -> Int -> Number -> Bool
 numberNotTaken board index entry =
-    not <| List.member (Just entry) (Board.numbersToCheck index board)
+    not <| List.member entry (Board.numbersToCheck index board)
 
 
 validEntries : List Number

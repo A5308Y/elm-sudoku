@@ -1,4 +1,4 @@
-module Board exposing (charToFieldState, charToNumber, empty, errors, fromNotation, numberToString, numbersToCheck, solvable, solveTest, toNotation)
+module Board exposing (..)
 
 import Array
 import Types exposing (..)
@@ -29,6 +29,12 @@ solveTest : Board
 solveTest =
     fromNotation
         "..189..4.2.8.619....94.3.51.3..824...67...12.8.21........3.9.8.514........36..712"
+
+
+solvableToo : Board
+solvableToo =
+    fromNotation
+        "73....9...5..4.7....2.1.......27.4....1.....8...13..6....3.12......8.....4..5..7."
 
 
 solvable : Board
@@ -161,17 +167,18 @@ indexHasError board index state =
         UserFilled number ->
             board
                 |> numbersToCheck index
-                |> List.member (Just number)
+                |> List.member number
 
         _ ->
             False
 
 
-numbersToCheck : Int -> Board -> List (Maybe Number)
+numbersToCheck : Int -> Board -> List Number
 numbersToCheck index board =
     board
         |> indexesToCheck index
         |> List.map (getFieldState board)
+        |> List.filterMap identity
 
 
 indexesToCheck : Int -> a -> List Int

@@ -24,6 +24,7 @@ view : Model -> Html Msg
 view model =
     div []
         [ button [ onClick Solve ] [ text "Solve" ]
+        , button [ onClick Clear ] [ text "Clear" ]
         , div [] (Array.toList (Array.indexedMap (renderField model) model))
         ]
 
@@ -103,6 +104,7 @@ type Msg
     = SetEditing Int FieldState
     | SetNumber Int String
     | Solve
+    | Clear
 
 
 update : Msg -> Model -> Model
@@ -149,6 +151,18 @@ update msg model =
                 |> Solver.solve
                 |> List.head
                 |> Maybe.withDefault Board.empty
+
+        Clear ->
+            model
+                |> Array.map
+                    (\entry ->
+                        case entry of
+                            PreFilled _ ->
+                                entry
+
+                            _ ->
+                                Empty
+                    )
 
 
 boxSize : number
