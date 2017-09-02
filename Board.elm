@@ -1,4 +1,4 @@
-module Board exposing (charToFieldState, charToNumber, empty, errors, fromNotation, numbersToCheck, positionFromIndex, solvableBoard)
+module Board exposing (charToFieldState, charToNumber, empty, errors, fromNotation, numbersToCheck, solvableBoard)
 
 import Array
 import Types exposing (..)
@@ -35,10 +35,6 @@ charToFieldState char =
 
         Just number ->
             PreFilled number
-
-
-positionFromIndex index =
-    ( rem index 9 + 1, (index // 9) + 1 )
 
 
 charToNumber : Char -> Maybe Number
@@ -81,6 +77,7 @@ errors board =
         |> Array.indexedMap (indexHasError board)
 
 
+getFieldState : Board -> Int -> Maybe Number
 getFieldState board index =
     case Array.get index board of
         Nothing ->
@@ -117,20 +114,24 @@ numbersToCheck index board =
         |> List.map (getFieldState board)
 
 
+indexesToCheck : Int -> a -> List Int
 indexesToCheck index board =
     (boxIndexes index ++ columnIndexes index ++ rowIndexes index)
         |> List.filter (not << (==) index)
 
 
+columnIndexes : Int -> List Int
 columnIndexes index =
     List.range 0 8
         |> List.map (\count -> count * 9 + rem index 9)
 
 
+rowIndexes : Int -> List Int
 rowIndexes index =
     List.range ((index // 9) * 9) (8 + (index // 9) * 9)
 
 
+boxIndexes : Int -> List number
 boxIndexes index =
     let
         boxStartIndex =

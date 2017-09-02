@@ -43,7 +43,7 @@ renderField model index state =
         PreFilled number ->
             div
                 [ fieldStyle index "grey" ]
-                [ text (toString number) ]
+                [ text (numberToString number) ]
 
         UserFilled number ->
             let
@@ -60,7 +60,7 @@ renderField model index state =
             in
             div
                 [ fieldStyle index backgroundColor, onClick (SetEditing index state) ]
-                [ text (toString number), text (toString index) ]
+                [ text (numberToString number) ]
 
         Editing maybeNumber ->
             let
@@ -70,7 +70,7 @@ renderField model index state =
                             []
 
                         Just number ->
-                            [ value (toString number) ]
+                            [ value (numberToString number) ]
             in
             div
                 [ fieldStyle index "white" ]
@@ -89,7 +89,7 @@ fieldStyle : Int -> String -> Attribute Msg
 fieldStyle index backgroundColor =
     let
         ( xPosition, yPosition ) =
-            Board.positionFromIndex index
+            positionFromIndex index
     in
     style
         [ ( "width", toString boxSize ++ "px" )
@@ -160,3 +160,38 @@ update msg model =
 boxSize : number
 boxSize =
     50
+
+
+numberToString : Number -> String
+numberToString number =
+    case number of
+        One ->
+            "1"
+
+        Two ->
+            "2"
+
+        Three ->
+            "3"
+
+        Four ->
+            "4"
+
+        Five ->
+            "5"
+
+        Six ->
+            "6"
+
+        Seven ->
+            "7"
+
+        Eight ->
+            "8"
+
+        Nine ->
+            "9"
+
+
+positionFromIndex index =
+    ( rem index 9 + 1, (index // 9) + 1 )

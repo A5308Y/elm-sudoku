@@ -21,12 +21,14 @@ solve board =
             |> List.concatMap solve
 
 
+includesSolution : Array.Array Board -> Bool
 includesSolution boards =
     List.any
         (\board -> List.all (\field -> field /= Empty) (Array.toList board))
         (Array.toList boards)
 
 
+possibleBoards : Board -> Array.Array Board
 possibleBoards board =
     board
         |> possibleNumbersByIndex
@@ -34,6 +36,7 @@ possibleBoards board =
         |> Array.filter (\board -> possibleNumbersByIndex board /= Array.empty)
 
 
+nextPossibleNumbers : Board -> Int -> List (Maybe Number) -> Board
 nextPossibleNumbers board index possibleNumbers =
     case List.head possibleNumbers of
         Nothing ->
@@ -48,15 +51,13 @@ nextPossibleNumbers board index possibleNumbers =
                     Array.set index (UserFilled number) board
 
 
-
---possibleNumbersByIndex : Board -> List Maybe
-
-
+possibleNumbersByIndex : Board -> Array.Array (List (Maybe Number))
 possibleNumbersByIndex board =
     board
         |> Array.indexedMap (possibleNumbersForIndex board)
 
 
+possibleNumbersForIndex : Board -> Int -> FieldState -> List (Maybe Number)
 possibleNumbersForIndex board index fieldState =
     case fieldState of
         Empty ->
@@ -71,10 +72,12 @@ possibleNumbersForIndex board index fieldState =
             []
 
 
+numberNotTaken : Board -> Int -> Maybe Number -> Bool
 numberNotTaken board index entry =
     not <| List.member entry (Board.numbersToCheck index board)
 
 
+validEntries : List (Maybe Number)
 validEntries =
     [ Just One
     , Just Two
