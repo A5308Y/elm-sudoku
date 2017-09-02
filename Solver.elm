@@ -7,25 +7,21 @@ import Types exposing (..)
 
 solve : Board -> List Board
 solve board =
-    if includesSolution (possibleBoards board) then
+    Array.foldr solveOnce [] (possibleBoards board)
+
+
+solveOnce : Board -> List Board -> List Board
+solveOnce board solutions =
+    if isSolution board then
         board
-            |> possibleBoards
-            |> Array.toList
-            |> List.head
-            |> Maybe.withDefault Board.empty
             |> List.singleton
     else
-        board
-            |> possibleBoards
-            |> Array.toList
-            |> List.concatMap solve
+        solve board
 
 
-includesSolution : Array.Array Board -> Bool
-includesSolution boards =
-    List.any
-        (\board -> List.all (\field -> field /= Empty) (Array.toList board))
-        (Array.toList boards)
+isSolution : Board -> Bool
+isSolution board =
+    List.all (\field -> field /= Empty) (Array.toList board)
 
 
 possibleBoards : Board -> Array.Array Board
