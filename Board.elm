@@ -100,6 +100,37 @@ charToNumber char =
             Nothing
 
 
+numberToString : Number -> String
+numberToString number =
+    case number of
+        One ->
+            "1"
+
+        Two ->
+            "2"
+
+        Three ->
+            "3"
+
+        Four ->
+            "4"
+
+        Five ->
+            "5"
+
+        Six ->
+            "6"
+
+        Seven ->
+            "7"
+
+        Eight ->
+            "8"
+
+        Nine ->
+            "9"
+
+
 errors : Board -> Array.Array Bool
 errors board =
     board
@@ -195,34 +226,3 @@ boxIndexes index =
     , boxStartIndex + 19
     , boxStartIndex + 20
     ]
-
-
-numberToString : Number -> String
-numberToString number =
-    case number of
-        One ->
-            "1"
-
-        Two ->
-            "2"
-
-        Three ->
-            "3"
-
-        Four ->
-            "4"
-
-        Five ->
-            "5"
-
-        Six ->
-            "6"
-
-        Seven ->
-            "7"
-
-        Eight ->
-            "8"
-
-        Nine ->
-            "9"

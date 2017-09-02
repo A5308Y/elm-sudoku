@@ -46,28 +46,23 @@ possibleBoards board =
         |> Array.toList
 
 
-fillNumberFromPossibleNumbers : Board -> Int -> List (Maybe Number) -> Board
+fillNumberFromPossibleNumbers : Board -> Int -> List Number -> Board
 fillNumberFromPossibleNumbers board index possibleNumbers =
     case List.head possibleNumbers of
         Nothing ->
             Array.empty
 
-        Just maybeNumber ->
-            case maybeNumber of
-                Nothing ->
-                    Array.empty
-
-                Just number ->
-                    Array.set index (UserFilled number) board
+        Just number ->
+            Array.set index (UserFilled number) board
 
 
-possibleNumbersByIndex : Board -> Array.Array (List (Maybe Number))
+possibleNumbersByIndex : Board -> Array.Array (List Number)
 possibleNumbersByIndex board =
     board
         |> Array.indexedMap (possibleNumbersForIndex board)
 
 
-possibleNumbersForIndex : Board -> Int -> FieldState -> List (Maybe Number)
+possibleNumbersForIndex : Board -> Int -> FieldState -> List Number
 possibleNumbersForIndex board index fieldState =
     case fieldState of
         Empty ->
@@ -82,20 +77,11 @@ possibleNumbersForIndex board index fieldState =
             []
 
 
-numberNotTaken : Board -> Int -> Maybe Number -> Bool
+numberNotTaken : Board -> Int -> Number -> Bool
 numberNotTaken board index entry =
-    not <| List.member entry (Board.numbersToCheck index board)
+    not <| List.member (Just entry) (Board.numbersToCheck index board)
 
 
-validEntries : List (Maybe Number)
+validEntries : List Number
 validEntries =
-    [ Just One
-    , Just Two
-    , Just Three
-    , Just Four
-    , Just Five
-    , Just Six
-    , Just Seven
-    , Just Eight
-    , Just Nine
-    ]
+    [ One, Two, Three, Four, Five, Six, Seven, Eight, Nine ]
