@@ -1,8 +1,17 @@
-module Solver exposing (solve)
+module Solver exposing (solveBoard)
 
 import Array
 import Board
 import Types exposing (..)
+
+
+solveBoard board =
+    case solve [ board ] of
+        [ board ] ->
+            board
+
+        _ ->
+            Board.empty
 
 
 solve : List Board -> List Board

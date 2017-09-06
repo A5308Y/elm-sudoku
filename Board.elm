@@ -25,8 +25,8 @@ toNotation board =
         |> String.concat
 
 
-solveTest : Board
-solveTest =
+solvableEasy : Board
+solvableEasy =
     fromNotation
         "..189..4.2.8.619....94.3.51.3..824...67...12.8.21........3.9.8.514........36..712"
 
