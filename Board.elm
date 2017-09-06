@@ -68,7 +68,7 @@ fieldStateToString state =
         PreFilled number ->
             numberToString number
 
-        _ ->
+        Empty ->
             "."
 
 

@@ -1,13 +1,13 @@
 module Main exposing (..)
 
 import Array
+import BetterSolver
 import Board
 import Char
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Keyboard
-import Solver
 import Types exposing (..)
 
 
@@ -23,7 +23,7 @@ main =
 
 initModel : Model
 initModel =
-    { editing = Nothing, board = Board.solveTest }
+    { editing = Nothing, board = Board.solvableEasy }
 
 
 view : Model -> Html Msg
@@ -132,10 +132,8 @@ update msg model =
         Solve ->
             let
                 updatedBoard =
-                    [ board ]
-                        |> Solver.solve
-                        |> List.head
-                        |> Maybe.withDefault Board.empty
+                    board
+                        |> BetterSolver.solve
             in
             ( { model | board = updatedBoard }, Cmd.none )
 
