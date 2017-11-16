@@ -108,9 +108,6 @@ suite =
                             Board.fromNotation ".......462..5........4.38..13.7.24..4..93.12..9..4.3.5.2.31..8.5.42..69..8.6.4..."
                     in
                     Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
-
-            --"Stacktrace exceeded" but the process looks correct to me. There are reports for similar problems in 0.18
-            --Maybe 0.19 will solve this
             , test "solves a given solvable board from https://www.sudoku-solutions.com/" <|
                 \_ ->
                     let
@@ -126,8 +123,22 @@ suite =
                     in
                     Expect.true
                         "Numbers differ"
-                        (sameNumbers (BetterSolver.solve board)
+                        (sameNumbers
+                            (BetterSolver.solve board)
                             (Board.fromNotation "749831526526497183183265749978123654654789312312546978467918235235674891891352467")
+                        )
+            , test "solves a second given easy solvable board from https://www.sudoku-solutions.com" <|
+                \_ ->
+                    let
+                        board =
+                            Board.fromNotation
+                                ".........8327.6..9....23.8..152..9..9...6...2.28...54..6.83....2..4....7...6....4"
+                    in
+                    Expect.true
+                        "Numbers differ"
+                        (sameNumbers
+                            (BetterSolver.solve board)
+                            (Board.fromNotation "596184723832756419174923685615247938943568172728391546467839251289415367351672894")
                         )
             , test "solves a given simple solvable board from https://www.sudoku-solutions.com/" <|
                 \_ ->
@@ -136,6 +147,16 @@ suite =
                             Board.solvableSimple
                     in
                     Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
+            , test "solves a given medium solvable board from https://www.sudoku-solutions.com/" <|
+                \_ ->
+                    let
+                        board =
+                            Board.fromNotation "94.1.3..2.5....6432.37...1...98....4.2.....6.6....72...1...94....5....2.8..6.1.5."
+                    in
+                    Expect.true "Numbers differ"
+                        (sameNumbers (BetterSolver.solve board)
+                            (Board.fromNotation "946153872157298643283746519579862134421935768638417295312579486765384921894621357")
+                        )
             ]
         ]
 
