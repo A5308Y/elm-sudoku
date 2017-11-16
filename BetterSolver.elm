@@ -21,36 +21,54 @@ solve board =
                 board
 
             Just ( index, entry ) ->
-                case possibleNumbersForIndex board index of
-                    [] ->
-                        let
-                            maybeFirstTryingEntry =
-                                board
-                                    |> Array.toList
-                                    |> List.indexedMap (,)
-                                    |> List.reverse
-                                    |> List.filter tryingFilter
-                                    |> List.head
-                        in
-                        case maybeFirstTryingEntry of
-                            Nothing ->
-                                Array.repeat 81 Impossible
+                if entry == Impossible then
+                    backtrack board (index - 1)
+                else
+                    case possibleNumbersForIndex board index of
+                        [] ->
+                            backtrack board index
 
-                            Just firstTryingEntry ->
-                                firstTryingEntry
-                                    |> tryNextEntry board
-                                    |> solve
-
-                    firstPossibleNumber :: otherPossibleNumbers ->
-                        board
-                            |> Array.set index (Trying firstPossibleNumber otherPossibleNumbers)
-                            |> solve
+                        firstPossibleNumber :: otherPossibleNumbers ->
+                            let
+                                debug =
+                                    Debug.log "filling out ( index, (firstPossibleNumber, otherPossibleNumbers)) " ( index, ( firstPossibleNumber, otherPossibleNumbers ) )
+                            in
+                            board
+                                |> Array.set index (Trying firstPossibleNumber otherPossibleNumbers)
+                                |> solve
 
 
+backtrack board index =
+    let
+        maybeFirstTryingEntry =
+            board
+                |> Array.toList
+                |> List.indexedMap (,)
+                |> List.reverse
+                |> List.filter tryingFilter
+                |> List.head
+    in
+    case maybeFirstTryingEntry of
+        Nothing ->
+            Array.repeat 81 Impossible
 
---Trying Impossible
---Wenn vorwärts überschreiben
---Wenn rückwärts nach oben geben
+        Just firstTryingEntry ->
+            firstTryingEntry
+                |> tryNextEntry (switchImpossibleToEmpty board)
+                |> solve
+
+
+switchImpossibleToEmpty board =
+    Array.map
+        (\entry ->
+            case entry of
+                Impossible ->
+                    Empty
+
+                _ ->
+                    entry
+        )
+        board
 
 
 boardlogger board =
@@ -76,6 +94,9 @@ tryNextEntry board ( index, tryEntry ) =
 
                 _ ->
                     tryEntry
+
+        debug =
+            Debug.log "backtracking on (index, updatedTryEntry)" ( index, updatedTryEntry )
     in
     Array.set index updatedTryEntry board
 
@@ -86,7 +107,6 @@ tryingFilter ( index, entry ) =
         Trying _ otherPossibleNumbers ->
             True
 
-        --not <| List.isEmpty otherPossibleNumbers
         _ ->
             False
 
@@ -104,6 +124,9 @@ emptyFilter : ( Int, FieldState ) -> Bool
 emptyFilter ( index, entry ) =
     case entry of
         Empty ->
+            True
+
+        Impossible ->
             True
 
         _ ->
