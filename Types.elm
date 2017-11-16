@@ -19,6 +19,8 @@ type FieldState
     = PreFilled Number
     | UserFilled Number
     | Empty
+    | Trying Number (List Number)
+    | Impossible
 
 
 type alias Board =

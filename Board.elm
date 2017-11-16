@@ -71,6 +71,12 @@ fieldStateToString state =
         Empty ->
             "."
 
+        Trying number otherNumbers ->
+            numberToString number
+
+        Impossible ->
+            "x"
+
 
 charToNumber : Char -> Maybe Number
 charToNumber char =
@@ -157,7 +163,13 @@ getFieldState board index =
                 PreFilled number ->
                     Just number
 
-                _ ->
+                Trying number _ ->
+                    Just number
+
+                Impossible ->
+                    Nothing
+
+                Empty ->
                     Nothing
 
 

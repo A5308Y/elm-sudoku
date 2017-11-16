@@ -16,29 +16,27 @@ solveBoard board =
 
 solve : List Board -> List Board
 solve boards =
-    let
-        firstBoard =
-            List.head boards
-
-        debug =
-            case firstBoard of
-                Nothing ->
-                    ""
-
-                Just board ->
+    case boards of
+        [ board ] ->
+            let
+                debug =
                     Debug.log "checking board" (Board.toNotation board)
-    in
-    case firstBoard of
-        Nothing ->
-            []
-
-        Just board ->
+            in
             if isSolution board then
                 [ board ]
             else
                 board
                     |> possibleBoards
                     |> solve
+
+        firstBoard :: otherBoards ->
+            if isSolution firstBoard then
+                [ firstBoard ]
+            else
+                solve otherBoards
+
+        [] ->
+            []
 
 
 isSolution : Board -> Bool
@@ -59,12 +57,15 @@ possibleBoards board =
 
 fillNumberFromPossibleNumbers : Board -> Int -> List Number -> Board
 fillNumberFromPossibleNumbers board index possibleNumbers =
-    case List.head possibleNumbers of
-        Nothing ->
+    case possibleNumbers of
+        [] ->
             Array.empty
 
-        Just number ->
+        [ number ] ->
             Array.set index (UserFilled number) board
+
+        firstNumber :: otherNumbers ->
+            Array.set index (UserFilled firstNumber) board
 
 
 possibleNumbersByIndex : Board -> Array.Array (List Number)
