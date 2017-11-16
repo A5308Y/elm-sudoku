@@ -103,9 +103,6 @@ tryNextEntry board ( index, tryEntry ) =
 
                 _ ->
                     tryEntry
-
-        debug =
-            Debug.log "backtracking on (index, updatedTryEntry)" ( index, updatedTryEntry )
     in
     Array.set index updatedTryEntry board
 
