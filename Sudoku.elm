@@ -23,7 +23,7 @@ main =
 
 initModel : Model
 initModel =
-    { editing = Nothing, board = Board.solvableSimple }
+    { editing = Nothing, board = Board.limitOfBetterSolver }
 
 
 view : Model -> Html Msg
