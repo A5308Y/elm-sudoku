@@ -29,10 +29,6 @@ solve board =
                             backtrack board index
 
                         firstPossibleNumber :: otherPossibleNumbers ->
-                            let
-                                debug =
-                                    Debug.log "filling out ( index, (firstPossibleNumber, otherPossibleNumbers)) " ( index, ( firstPossibleNumber, otherPossibleNumbers ) )
-                            in
                             board
                                 |> Array.set index (Trying firstPossibleNumber otherPossibleNumbers)
                                 |> solve
