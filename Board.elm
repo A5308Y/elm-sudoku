@@ -25,16 +25,10 @@ toNotation board =
         |> String.concat
 
 
-solvableEasy : Board
-solvableEasy =
+solvableWithoutBacktracking : Board
+solvableWithoutBacktracking =
     fromNotation
         "..189..4.2.8.619....94.3.51.3..824...67...12.8.21........3.9.8.514........36..712"
-
-
-solvableToo : Board
-solvableToo =
-    fromNotation
-        "73....9...5..4.7....2.1.......27.4....1.....8...13..6....3.12......8.....4..5..7."
 
 
 solvable : Board
@@ -47,6 +41,18 @@ solved : Board
 solved =
     fromNotation
         "351897246248561937679423851135782469467935128892146375726319584514278693983654712"
+
+
+solvableEasy : Board
+solvableEasy =
+    fromNotation
+        "...8.1.2..26.9.1......6.7........654.........312........7.1......5.7.89..9.3.2..."
+
+
+solvableSimple : Board
+solvableSimple =
+    fromNotation
+        ".79.3.65....4.2.......7.....8.....2.2.3...8.5.4.....7.....5.......1.6....91.2.43."
 
 
 charToFieldState : Char -> FieldState

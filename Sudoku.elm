@@ -23,7 +23,7 @@ main =
 
 initModel : Model
 initModel =
-    { editing = Nothing, board = Board.solvableEasy }
+    { editing = Nothing, board = Board.solvableSimple }
 
 
 view : Model -> Html Msg
@@ -82,6 +82,18 @@ renderField model index state =
             div
                 [ fieldStyle index backgroundColor, onClick (SetEditing index) ]
                 [ text (Board.numberToString number) ]
+
+        Impossible ->
+            div
+                [ fieldStyle index "red" ]
+                [ text "x" ]
+
+        Trying number otherPossibleNumbers ->
+            div
+                [ fieldStyle index "white" ]
+                [ div [] [ text (Board.numberToString number) ]
+                , div [] [ text (toString (List.map Board.numberToString otherPossibleNumbers)) ]
+                ]
 
 
 fieldStyle : Int -> String -> Attribute Msg

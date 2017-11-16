@@ -7,15 +7,15 @@ import Types exposing (..)
 
 solve : Board -> Board
 solve board =
-    let
-        nextEmptyEntry =
-            board
-                |> boardlogger
-                |> findNextEmptyEntry
-    in
     if isSolution board then
-        board
+        convertTryingToPrefilled board
     else
+        let
+            nextEmptyEntry =
+                board
+                    |> boardlogger
+                    |> findNextEmptyEntry
+        in
         case nextEmptyEntry of
             Nothing ->
                 board
@@ -54,16 +54,29 @@ backtrack board index =
 
         Just firstTryingEntry ->
             firstTryingEntry
-                |> tryNextEntry (switchImpossibleToEmpty board)
+                |> tryNextEntry (convertImpossibleToEmpty board)
                 |> solve
 
 
-switchImpossibleToEmpty board =
+convertImpossibleToEmpty board =
     Array.map
         (\entry ->
             case entry of
                 Impossible ->
                     Empty
+
+                _ ->
+                    entry
+        )
+        board
+
+
+convertTryingToPrefilled board =
+    Array.map
+        (\entry ->
+            case entry of
+                Trying number otherPossibleNumbers ->
+                    PreFilled number
 
                 _ ->
                     entry
@@ -146,6 +159,9 @@ fieldSolvedFilter field =
             True
 
         PreFilled _ ->
+            True
+
+        Trying _ _ ->
             True
 
         _ ->
