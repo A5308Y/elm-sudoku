@@ -18,10 +18,6 @@ solve : List Board -> List Board
 solve boards =
     case boards of
         [ board ] ->
-            let
-                debug =
-                    Debug.log "checking board" (Board.toNotation board)
-            in
             if isSolution board then
                 [ board ]
             else

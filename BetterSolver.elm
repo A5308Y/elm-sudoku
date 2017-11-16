@@ -18,7 +18,6 @@ solve givenBoard =
         let
             nextEmptyEntry =
                 board
-                    |> boardlogger
                     |> findNextEmptyEntry
         in
         case nextEmptyEntry of

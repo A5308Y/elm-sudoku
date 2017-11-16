@@ -111,11 +111,29 @@ suite =
 
             --"Stacktrace exceeded" but the process looks correct to me. There are reports for similar problems in 0.18
             --Maybe 0.19 will solve this
-            , test "solves a given solvable board" <|
+            , test "solves a given solvable board from https://www.sudoku-solutions.com/" <|
                 \_ ->
                     let
                         board =
                             Board.solvable
+                    in
+                    Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
+            , test "solves a given easy solvable board from https://www.sudoku-solutions.com/" <|
+                \_ ->
+                    let
+                        board =
+                            Board.solvableEasy
+                    in
+                    Expect.true
+                        "Numbers differ"
+                        (sameNumbers (BetterSolver.solve board)
+                            (Board.fromNotation "749831526526497183183265749978123654654789312312546978467918235235674891891352467")
+                        )
+            , test "solves a given simple solvable board from https://www.sudoku-solutions.com/" <|
+                \_ ->
+                    let
+                        board =
+                            Board.solvableSimple
                     in
                     Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
             ]
