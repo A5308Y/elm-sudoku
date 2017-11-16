@@ -37,7 +37,7 @@ solvable =
 
 limitOfBetterSolver : Board
 limitOfBetterSolver =
-    fromNotation ".......462..5........4.38..13.7.24..4..93.12..9..4.3.5.2.31..8.5.42..69..8.6.4..."
+    solvableEasy
 
 
 solved : Board
