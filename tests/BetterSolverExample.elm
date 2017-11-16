@@ -15,55 +15,90 @@ suite : Test
 suite =
     describe "BetterSolver"
         [ describe ".solve"
-            [ test "solves a board with one empty field" <|
+            [ test "BetterSolver solves a board with one empty field" <|
                 \_ ->
                     let
                         board =
                             Board.fromNotation ".51897246248561937679423851135782469467935128892146375726319584514278693983654712"
                     in
                     Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
-            , test "solves a board with two empty fields" <|
+            , test "BetterSolver solves a board with two empty fields" <|
                 \_ ->
                     let
                         board =
                             Board.fromNotation "..1897246248561937679423851135782469467935128892146375726319584514278693983654712"
                     in
                     Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
-            , test "solves a board with three empty fields" <|
+            , test "BetterSolver solves a board with three empty fields" <|
                 \_ ->
                     let
                         board =
                             Board.fromNotation "..1897246248561937679423851135782469467935128892146375726319.84514278693983654712"
                     in
                     Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
-            , test "solves a board with five empty fields" <|
+            , test "BetterSolver solves a board with five empty fields" <|
                 \_ ->
                     let
                         board =
                             Board.fromNotation "..189724624856193767942385113578246.467935128892146375726319.8451427869.983654712"
                     in
                     Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
-            , test "solves a given board that's solvable without backtracking" <|
+            , test "BetterSolver solves a given board that's solvable without backtracking" <|
                 \_ ->
                     let
                         board =
                             Board.solvableWithoutBacktracking
                     in
                     Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
-            , test "BetterSolver solves a board with thirty empty fields that needs backtracking" <|
+            , test "BetterSolver solves a board with thirty-five empty fields that needs backtracking" <|
                 \_ ->
                     let
                         board =
                             Board.fromNotation ".......4624.56.......4.38..13.7.246.46793.128.9214.3.572.319.845.427.69.98.6.4..."
                     in
                     Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
-            , test "Solver solves a board with thirty empty fields that needs backtracking" <|
+            , test "Solver does not solves a board with thirty-five empty fields that needs backtracking" <|
                 \_ ->
                     let
                         board =
                             Board.fromNotation ".......4624.56.......4.38..13.7.246.46793.128.9214.3.572.319.845.427.69.98.6.4..."
                     in
                     Expect.false "Numbers the same" (sameNumbers (Solver.solveBoard board) solvedBoard)
+            , test "BetterSolver solves a board with forty empty fields that needs backtracking" <|
+                \_ ->
+                    let
+                        board =
+                            Board.fromNotation ".......462..56.......4.38..13.7.246.4..93.128.9214.3.572.31..845.42..69.98.6.4..."
+                    in
+                    Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
+            , test "BetterSolver solves a board with forty-five empty fields that needs backtracking" <|
+                \_ ->
+                    let
+                        board =
+                            Board.fromNotation ".......462..56.......4.38..13.7.24..4..93.128.9..4.3.5.2.31..8.5.42..69.98.6.4..."
+                    in
+                    Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
+            , test "BetterSolver solves a board with forty-six empty fields that needs backtracking" <|
+                \_ ->
+                    let
+                        board =
+                            Board.fromNotation ".......462..5........4.38..13.7.24..4..93.128.9..4.3.5.2.31..8.5.42..69.98.6.4..."
+                    in
+                    Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
+            , test "BetterSolver solves a board with forty-seven empty fields that needs backtracking" <|
+                \_ ->
+                    let
+                        board =
+                            Board.fromNotation ".......462..5........4.38..13.7.24..4..93.128.9..4.3.5.2.31..8.5.42..69..8.6.4..."
+                    in
+                    Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
+            , test "BetterSolver solves a board with forty-eight empty fields that needs backtracking" <|
+                \_ ->
+                    let
+                        board =
+                            Board.fromNotation ".......462..5........4.38..13.7.24..4..93.12..9..4.3.5.2.31..8.5.42..69..8.6.4..."
+                    in
+                    Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
 
             --"Stacktrace exceeded" but the process looks correct to me. There are reports for similar problems in 0.18
             --Maybe 0.19 will solve this
