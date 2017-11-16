@@ -108,14 +108,14 @@ suite =
                             Board.fromNotation ".......462..5........4.38..13.7.24..4..93.12..9..4.3.5.2.31..8.5.42..69..8.6.4..."
                     in
                     Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
-            , test "solves a given solvable board from https://www.sudoku-solutions.com/" <|
+            , test "solves a given solvable board from https://www.sudoku-solutions.com" <|
                 \_ ->
                     let
                         board =
                             Board.solvable
                     in
                     Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
-            , test "solves a given easy solvable board from https://www.sudoku-solutions.com/" <|
+            , test "solves a given easy solvable board from https://www.sudoku-solutions.com" <|
                 \_ ->
                     let
                         board =
@@ -140,14 +140,14 @@ suite =
                             (BetterSolver.solve board)
                             (Board.fromNotation "596184723832756419174923685615247938943568172728391546467839251289415367351672894")
                         )
-            , test "solves a given simple solvable board from https://www.sudoku-solutions.com/" <|
+            , test "solves a given simple solvable board from https://www.sudoku-solutions.com" <|
                 \_ ->
                     let
                         board =
                             Board.solvableSimple
                     in
                     Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
-            , test "solves a given medium solvable board from https://www.sudoku-solutions.com/" <|
+            , test "solves a given medium solvable board from https://www.sudoku-solutions.com" <|
                 \_ ->
                     let
                         board =
