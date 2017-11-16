@@ -6,7 +6,16 @@ import Types exposing (..)
 
 
 solve : Board -> Board
-solve board =
+solve givenBoard =
+    let
+        board =
+            case Array.toList (Array.filter tryingFilter (Array.indexedMap (,) givenBoard)) of
+                [] ->
+                    Array.indexedMap (fillEntryIfOnlyOnePossibility givenBoard) givenBoard
+
+                _ ->
+                    givenBoard
+    in
     if isSolution board then
         convertTryingToPrefilled board
     else
@@ -32,6 +41,15 @@ solve board =
                             board
                                 |> Array.set index (Trying firstPossibleNumber otherPossibleNumbers)
                                 |> solve
+
+
+fillEntryIfOnlyOnePossibility board index entry =
+    case possibleNumbersForIndex board index of
+        [ onlyPossibility ] ->
+            PreFilled onlyPossibility
+
+        _ ->
+            entry
 
 
 backtrack board index =
