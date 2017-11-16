@@ -9,12 +9,8 @@ solve : Board -> Board
 solve givenBoard =
     let
         board =
-            case Array.toList (Array.filter tryingFilter (Array.indexedMap (,) givenBoard)) of
-                [] ->
-                    Array.indexedMap (fillEntryIfOnlyOnePossibility givenBoard) givenBoard
-
-                _ ->
-                    givenBoard
+            givenBoard
+                |> fillOnlyPossibleNumbers
     in
     if isSolution board then
         convertTryingToPrefilled board
@@ -41,6 +37,15 @@ solve givenBoard =
                             board
                                 |> Array.set index (Trying firstPossibleNumber otherPossibleNumbers)
                                 |> solve
+
+
+fillOnlyPossibleNumbers board =
+    case Array.toList (Array.filter tryingFilter (Array.indexedMap (,) board)) of
+        [] ->
+            Array.indexedMap (fillEntryIfOnlyOnePossibility board) board
+
+        _ ->
+            board
 
 
 fillEntryIfOnlyOnePossibility board index entry =

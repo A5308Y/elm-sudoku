@@ -14,7 +14,16 @@ import Types exposing (..)
 suite : Test
 suite =
     describe "BetterSolver"
-        [ describe ".solve"
+        [ describe ".possibleNumbersForIndex"
+            [ test "returns possible numbers for the given index" <|
+                \_ ->
+                    let
+                        board =
+                            Board.fromNotation "..1897246248561937679423851135782469467935128892146375726319584514278693983654712"
+                    in
+                    Expect.equalLists (BetterSolver.possibleNumbersForIndex board 0) [ Three ]
+            ]
+        , describe ".solve"
             [ test "BetterSolver solves a board with one empty field" <|
                 \_ ->
                     let
@@ -102,22 +111,13 @@ suite =
 
             --"Stacktrace exceeded" but the process looks correct to me. There are reports for similar problems in 0.18
             --Maybe 0.19 will solve this
-            --test "solves a given solvable board" <|
-            --  \_ ->
-            --      let
-            --          board =
-            --              Board.solvable
-            --      in
-            --      Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
-            ]
-        , describe ".possibleNumbersForIndex"
-            [ test "returns possible numbers for the given index" <|
+            , test "solves a given solvable board" <|
                 \_ ->
                     let
                         board =
-                            Board.fromNotation "..1897246248561937679423851135782469467935128892146375726319584514278693983654712"
+                            Board.solvable
                     in
-                    Expect.equalLists (BetterSolver.possibleNumbersForIndex board 0) [ Three ]
+                    Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
             ]
         ]
 
