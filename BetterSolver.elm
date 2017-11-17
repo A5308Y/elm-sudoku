@@ -8,10 +8,6 @@ import Types exposing (..)
 
 solve : Board -> Board
 solve board =
-    let
-        debug =
-            Debug.log "board" (Board.toNotation board)
-    in
     if isSolution board then
         convertTryingToPrefilled board
     else if isImpossible board then
@@ -48,14 +44,6 @@ convertTryingToPrefilled board =
                     entry
         )
         board
-
-
-boardlogger board =
-    let
-        debug =
-            Debug.log "board" (Board.toNotation board)
-    in
-    board
 
 
 findNextEmptyEntry : Board -> Maybe ( Int, FieldState )
