@@ -14,6 +14,8 @@ solve board =
     in
     if isSolution board then
         convertTryingToPrefilled board
+    else if isImpossible board then
+        board
     else
         case findNextEmptyEntry board of
             Nothing ->
@@ -83,6 +85,22 @@ isSolution board =
     board
         |> Array.toList
         |> List.all fieldSolvedFilter
+
+
+isImpossible : Board -> Bool
+isImpossible board =
+    board
+        |> Array.toList
+        |> List.all impossibleFilter
+
+
+impossibleFilter field =
+    case field of
+        Impossible ->
+            True
+
+        _ ->
+            False
 
 
 fieldSolvedFilter field =
