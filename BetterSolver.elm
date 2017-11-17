@@ -1,92 +1,38 @@
 module BetterSolver exposing (possibleNumbersForIndex, solve)
 
 import Array
+import Backtracker exposing (backtrack)
 import Board
 import Types exposing (..)
 
 
 solve : Board -> Board
-solve givenBoard =
+solve board =
     let
-        board =
-            givenBoard
-                |> fillOnlyPossibleNumbers
+        debug =
+            Debug.log "board" (Board.toNotation board)
     in
     if isSolution board then
         convertTryingToPrefilled board
     else
-        let
-            nextEmptyEntry =
-                board
-                    |> findNextEmptyEntry
-        in
-        case nextEmptyEntry of
+        case findNextEmptyEntry board of
             Nothing ->
                 board
 
             Just ( index, entry ) ->
                 if entry == Impossible then
                     backtrack board (index - 1)
+                        |> solve
                 else
                     case possibleNumbersForIndex board index of
                         [] ->
                             backtrack board index
+                                |> solve
 
                         firstPossibleNumber :: otherPossibleNumbers ->
                             board
                                 |> Array.set index (Trying firstPossibleNumber otherPossibleNumbers)
                                 |> solve
-
-
-fillOnlyPossibleNumbers board =
-    case Array.toList (Array.filter tryingFilter (Array.indexedMap (,) board)) of
-        [] ->
-            Array.indexedMap (fillEntryIfOnlyOnePossibility board) board
-
-        _ ->
-            board
-
-
-fillEntryIfOnlyOnePossibility board index entry =
-    case possibleNumbersForIndex board index of
-        [ onlyPossibility ] ->
-            PreFilled onlyPossibility
-
-        _ ->
-            entry
-
-
-backtrack board index =
-    let
-        maybeFirstTryingEntry =
-            board
-                |> Array.toList
-                |> List.indexedMap (,)
-                |> List.reverse
-                |> List.filter tryingFilter
-                |> List.head
-    in
-    case maybeFirstTryingEntry of
-        Nothing ->
-            Array.repeat 81 Impossible
-
-        Just firstTryingEntry ->
-            firstTryingEntry
-                |> tryNextEntry (convertImpossibleToEmpty board)
-                |> solve
-
-
-convertImpossibleToEmpty board =
-    Array.map
-        (\entry ->
-            case entry of
-                Impossible ->
-                    Empty
-
-                _ ->
-                    entry
-        )
-        board
 
 
 convertTryingToPrefilled board =
@@ -108,35 +54,6 @@ boardlogger board =
             Debug.log "board" (Board.toNotation board)
     in
     board
-
-
-tryNextEntry : Board -> ( Int, FieldState ) -> Board
-tryNextEntry board ( index, tryEntry ) =
-    let
-        updatedTryEntry =
-            case tryEntry of
-                Trying number otherPossibleNumbers ->
-                    case otherPossibleNumbers of
-                        chosenNumber :: numbersLeft ->
-                            Trying chosenNumber numbersLeft
-
-                        [] ->
-                            Impossible
-
-                _ ->
-                    tryEntry
-    in
-    Array.set index updatedTryEntry board
-
-
-tryingFilter : ( Int, FieldState ) -> Bool
-tryingFilter ( index, entry ) =
-    case entry of
-        Trying _ otherPossibleNumbers ->
-            True
-
-        _ ->
-            False
 
 
 findNextEmptyEntry : Board -> Maybe ( Int, FieldState )

@@ -146,7 +146,11 @@ suite =
                         board =
                             Board.solvableSimple
                     in
-                    Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
+                    Expect.true "Numbers differ"
+                        (sameNumbers
+                            (BetterSolver.solve board)
+                            (Board.fromNotation "479831652158462793632579148785613924213947865946285371867354219324196587591728436")
+                        )
             , test "solves a given medium solvable board from https://www.sudoku-solutions.com" <|
                 \_ ->
                     let
