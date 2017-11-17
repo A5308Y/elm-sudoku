@@ -35,24 +35,24 @@ solvable =
     fromNotation "....9......8....3767.4..8...3..8246...........9214..7...6..9.8451....6......5...."
 
 
-limitOfBetterSolver : Board
-limitOfBetterSolver =
-    solvableEasy
-
-
 solved : Board
 solved =
     fromNotation "351897246248561937679423851135782469467935128892146375726319584514278693983654712"
 
 
-solvableEasy : Board
-solvableEasy =
+simple : Board
+simple =
+    fromNotation ".79.3.65....4.2.......7.....8.....2.2.3...8.5.4.....7.....5.......1.6....91.2.43."
+
+
+easy : Board
+easy =
     fromNotation "...8.1.2..26.9.1......6.7........654.........312........7.1......5.7.89..9.3.2..."
 
 
-solvableSimple : Board
-solvableSimple =
-    fromNotation ".79.3.65....4.2.......7.....8.....2.2.3...8.5.4.....7.....5.......1.6....91.2.43."
+hard : Board
+hard =
+    fromNotation ".6..4..7....2..15....9.......9..4.82.........72.6..4....71.89...42..7....5..6..2."
 
 
 charToFieldState : Char -> FieldState

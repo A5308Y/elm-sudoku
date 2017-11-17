@@ -23,14 +23,18 @@ main =
 
 initModel : Model
 initModel =
-    { editing = Nothing, board = Board.limitOfBetterSolver }
+    { editing = Nothing, board = Board.empty }
 
 
 view : Model -> Html Msg
 view model =
     div []
         [ button [ onClick Solve ] [ text "Solve" ]
-        , button [ onClick Clear ] [ text "Clear" ]
+        , button [ onClick Clear ] [ text "Clear User Input" ]
+        , button [ onClick (LoadBoard Board.empty) ] [ text "Empty" ]
+        , button [ onClick (LoadBoard Board.simple) ] [ text "Simple" ]
+        , button [ onClick (LoadBoard Board.easy) ] [ text "Easy" ]
+        , button [ onClick (LoadBoard Board.hard) ] [ text "Hard" ]
         , div [] (Array.toList (Array.indexedMap (renderField model) model.board))
         ]
 
@@ -121,6 +125,7 @@ type Msg
     | Solve
     | Clear
     | KeyPressed Char
+    | LoadBoard Board
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -130,6 +135,9 @@ update msg model =
             model.board
     in
     case msg of
+        LoadBoard board ->
+            ( { model | board = board }, Cmd.none )
+
         KeyPressed char ->
             case model.editing of
                 Nothing ->
