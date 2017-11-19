@@ -59,7 +59,7 @@ renderField model index state =
 
         PreFilled number ->
             div
-                [ fieldStyle index "grey" ]
+                [ fieldStyle index "lightgrey" ]
                 [ text (Board.numberToString number) ]
 
         UserFilled number ->
@@ -155,7 +155,7 @@ color positions position =
     if List.member position positions then
         "000"
     else
-        "BBB"
+        "777"
 
 
 type BorderPosition
