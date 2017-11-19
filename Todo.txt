@@ -6,5 +6,4 @@
 - Show solving process on board
 - Randomly generate a sudoku board
 - Keyboard arrows move selection around
-- 
-
+- type annotations

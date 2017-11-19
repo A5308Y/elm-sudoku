@@ -25,21 +25,6 @@ toNotation board =
         |> String.concat
 
 
-solvableWithoutBacktracking : Board
-solvableWithoutBacktracking =
-    fromNotation "..189..4.2.8.619....94.3.51.3..824...67...12.8.21........3.9.8.514........36..712"
-
-
-solvable : Board
-solvable =
-    fromNotation "....9......8....3767.4..8...3..8246...........9214..7...6..9.8451....6......5...."
-
-
-solved : Board
-solved =
-    fromNotation "351897246248561937679423851135782469467935128892146375726319584514278693983654712"
-
-
 simple : Board
 simple =
     fromNotation ".79.3.65....4.2.......7.....8.....2.2.3...8.5.4.....7.....5.......1.6....91.2.43."

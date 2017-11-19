@@ -56,7 +56,7 @@ suite =
                 \_ ->
                     let
                         board =
-                            Board.solvableWithoutBacktracking
+                            Board.fromNotation "..189..4.2.8.619....94.3.51.3..824...67...12.8.21........3.9.8.514........36..712"
                     in
                     Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
             , test "BetterSolver solves a board with thirty-five empty fields that needs backtracking" <|
@@ -112,14 +112,14 @@ suite =
                 \_ ->
                     let
                         board =
-                            Board.solvable
+                            Board.fromNotation "....9......8....3767.4..8...3..8246...........9214..7...6..9.8451....6......5...."
                     in
                     Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
             , test "solves a given easy solvable board from https://www.sudoku-solutions.com" <|
                 \_ ->
                     let
                         board =
-                            Board.solvableEasy
+                            Board.easy
                     in
                     Expect.true
                         "Numbers differ"
@@ -144,7 +144,7 @@ suite =
                 \_ ->
                     let
                         board =
-                            Board.solvableSimple
+                            Board.simple
                     in
                     Expect.true "Numbers differ"
                         (sameNumbers
@@ -165,6 +165,7 @@ suite =
         ]
 
 
+solvedBoard : Board
 solvedBoard =
     Board.fromNotation "351897246248561937679423851135782469467935128892146375726319584514278693983654712"
 
