@@ -105,11 +105,16 @@ fieldStyle index backgroundColor =
     let
         ( xPosition, yPosition ) =
             positionFromIndex index
+
+        borderCss =
+            [ Top, Right, Bottom, Left ]
+                |> List.filter (conditionFilter index)
+                |> border
     in
     style
         [ ( "width", toString boxSize ++ "px" )
         , ( "height", toString boxSize ++ "px" )
-        , ( "box-shadow", "2px 0 0 0 #888, 0 2px 0 0 #888, 2px 2px 0 0 #888, 2px 0 0 0 #888 inset, 0 2px 0 0 #888 inset" )
+        , borderCss
         , ( "position", "absolute" )
         , ( "left", toString (xPosition * boxSize) ++ "px" )
         , ( "top", toString (yPosition * boxSize) ++ "px" )
@@ -118,6 +123,46 @@ fieldStyle index backgroundColor =
         , ( "justify-content", "center" )
         , ( "background-color", backgroundColor )
         ]
+
+
+conditionFilter index borderPosition =
+    case borderPosition of
+        Top ->
+            index < 9 || index > 26 && index < 36 || index > 53 && index < 63
+
+        Left ->
+            index % 3 == 0
+
+        Right ->
+            index % 9 == 8
+
+        Bottom ->
+            index > 71
+
+
+border positions =
+    ( "box-shadow"
+    , String.join ", "
+        [ "2px 0 0 0 #" ++ color positions Right
+        , "0 2px 0 0 #" ++ color positions Bottom
+        , "2px 0 0 0 #" ++ color positions Left ++ " inset"
+        , "0 2px 0 0 #" ++ color positions Top ++ " inset"
+        ]
+    )
+
+
+color positions position =
+    if List.member position positions then
+        "000"
+    else
+        "BBB"
+
+
+type BorderPosition
+    = Top
+    | Right
+    | Bottom
+    | Left
 
 
 type Msg
