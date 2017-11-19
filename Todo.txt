@@ -1,0 +1,10 @@
+- Same name for field, cell, entry
+- Fix grey border overlapping black one
+- Use elm style elements for positioning and styling of board and buttons
+- Improve speed of solver by using real strategies
+- Use image recognition to detect board
+- Show solving process on board
+- Randomly generate a sudoku board
+- Keyboard arrows move selection around
+- 
+
