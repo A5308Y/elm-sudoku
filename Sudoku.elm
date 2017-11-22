@@ -125,6 +125,7 @@ fieldStyle index backgroundColor =
         ]
 
 
+conditionFilter : Int -> BorderPosition -> Bool
 conditionFilter index borderPosition =
     case borderPosition of
         Top ->
@@ -140,6 +141,7 @@ conditionFilter index borderPosition =
             index > 71
 
 
+border : List BorderPosition -> ( String, String )
 border positions =
     ( "box-shadow"
     , String.join ", "
@@ -151,6 +153,7 @@ border positions =
     )
 
 
+color : List BorderPosition -> BorderPosition -> String
 color positions position =
     if List.member position positions then
         "000"

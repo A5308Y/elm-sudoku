@@ -33,6 +33,7 @@ solve board =
                                 |> solve
 
 
+convertTryingToPrefilled : Board -> Board
 convertTryingToPrefilled board =
     Array.map
         (\entry ->
@@ -82,6 +83,7 @@ isImpossible board =
         |> List.all impossibleFilter
 
 
+impossibleFilter : FieldState -> Bool
 impossibleFilter field =
     case field of
         Impossible ->
@@ -91,6 +93,7 @@ impossibleFilter field =
             False
 
 
+fieldSolvedFilter : FieldState -> Bool
 fieldSolvedFilter field =
     case field of
         UserFilled _ ->
