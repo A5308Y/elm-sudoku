@@ -38,7 +38,7 @@ convertTryingToPrefilled board =
     Array.map
         (\entry ->
             case entry of
-                Trying number otherPossibleNumbers ->
+                Trying number _ ->
                     PreFilled number
 
                 _ ->
@@ -57,7 +57,7 @@ findNextEmptyEntry board =
 
 
 emptyFilter : ( Int, FieldState ) -> Bool
-emptyFilter ( index, entry ) =
+emptyFilter ( _, entry ) =
     case entry of
         Empty ->
             True
