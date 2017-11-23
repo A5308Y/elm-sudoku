@@ -1,5 +1,7 @@
 - Same name for field, cell, entry
 - type annotations
+- improve formula for finding boxes
+- Styling
 - Make site available on github
 - Use elm style elements for positioning and styling of board and buttons
 - Randomly generate a sudoku board
@@ -8,3 +10,4 @@
 - Show solving process on board
 - Improve speed of solver by using real strategies
 - Use image recognition to detect board
+- more tests?
