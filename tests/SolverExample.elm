@@ -1,18 +1,18 @@
-module BetterSolverExample exposing (..)
+module SolverExample exposing (..)
 
 import Array
-import BetterSolver
 import Board
 import Dict
 import Expect exposing (Expectation)
 import Fuzz exposing (Fuzzer, int, list, string)
+import Solver
 import Test exposing (..)
 import Types exposing (..)
 
 
 suite : Test
 suite =
-    describe "BetterSolver"
+    describe "Solver"
         [ describe ".possibleNumbersForIndex"
             [ test "returns possible numbers for the given index" <|
                 \_ ->
@@ -20,93 +20,93 @@ suite =
                         board =
                             Board.fromNotation "..1897246248561937679423851135782469467935128892146375726319584514278693983654712"
                     in
-                    Expect.equalLists (BetterSolver.possibleNumbersForIndex board 0) [ Three ]
+                    Expect.equalLists (Solver.possibleNumbersForIndex board 0) [ Three ]
             ]
         , describe ".solve"
-            [ test "BetterSolver solves a board with one empty field" <|
+            [ test "Solver solves a board with one empty field" <|
                 \_ ->
                     let
                         board =
                             Board.fromNotation ".51897246248561937679423851135782469467935128892146375726319584514278693983654712"
                     in
-                    Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
-            , test "BetterSolver solves a board with two empty fields" <|
+                    Expect.true "Numbers differ" (sameNumbers (Solver.solve board) solvedBoard)
+            , test "Solver solves a board with two empty fields" <|
                 \_ ->
                     let
                         board =
                             Board.fromNotation "..1897246248561937679423851135782469467935128892146375726319584514278693983654712"
                     in
-                    Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
-            , test "BetterSolver solves a board with three empty fields" <|
+                    Expect.true "Numbers differ" (sameNumbers (Solver.solve board) solvedBoard)
+            , test "Solver solves a board with three empty fields" <|
                 \_ ->
                     let
                         board =
                             Board.fromNotation "..1897246248561937679423851135782469467935128892146375726319.84514278693983654712"
                     in
-                    Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
-            , test "BetterSolver solves a board with five empty fields" <|
+                    Expect.true "Numbers differ" (sameNumbers (Solver.solve board) solvedBoard)
+            , test "Solver solves a board with five empty fields" <|
                 \_ ->
                     let
                         board =
                             Board.fromNotation "..189724624856193767942385113578246.467935128892146375726319.8451427869.983654712"
                     in
-                    Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
-            , test "BetterSolver solves a given board that's solvable without backtracking" <|
+                    Expect.true "Numbers differ" (sameNumbers (Solver.solve board) solvedBoard)
+            , test "Solver solves a given board that's solvable without backtracking" <|
                 \_ ->
                     let
                         board =
                             Board.fromNotation "..189..4.2.8.619....94.3.51.3..824...67...12.8.21........3.9.8.514........36..712"
                     in
-                    Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
-            , test "BetterSolver solves a board with thirty-five empty fields that needs backtracking" <|
+                    Expect.true "Numbers differ" (sameNumbers (Solver.solve board) solvedBoard)
+            , test "Solver solves a board with thirty-five empty fields that needs backtracking" <|
                 \_ ->
                     let
                         board =
                             Board.fromNotation ".......4624.56.......4.38..13.7.246.46793.128.9214.3.572.319.845.427.69.98.6.4..."
                     in
-                    Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
-            , test "BetterSolver solves a board with forty empty fields that needs backtracking" <|
+                    Expect.true "Numbers differ" (sameNumbers (Solver.solve board) solvedBoard)
+            , test "Solver solves a board with forty empty fields that needs backtracking" <|
                 \_ ->
                     let
                         board =
                             Board.fromNotation ".......462..56.......4.38..13.7.246.4..93.128.9214.3.572.31..845.42..69.98.6.4..."
                     in
-                    Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
-            , test "BetterSolver solves a board with forty-five empty fields that needs backtracking" <|
+                    Expect.true "Numbers differ" (sameNumbers (Solver.solve board) solvedBoard)
+            , test "Solver solves a board with forty-five empty fields that needs backtracking" <|
                 \_ ->
                     let
                         board =
                             Board.fromNotation ".......462..56.......4.38..13.7.24..4..93.128.9..4.3.5.2.31..8.5.42..69.98.6.4..."
                     in
-                    Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
-            , test "BetterSolver solves a board with forty-six empty fields that needs backtracking" <|
+                    Expect.true "Numbers differ" (sameNumbers (Solver.solve board) solvedBoard)
+            , test "Solver solves a board with forty-six empty fields that needs backtracking" <|
                 \_ ->
                     let
                         board =
                             Board.fromNotation ".......462..5........4.38..13.7.24..4..93.128.9..4.3.5.2.31..8.5.42..69.98.6.4..."
                     in
-                    Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
-            , test "BetterSolver solves a board with forty-seven empty fields that needs backtracking" <|
+                    Expect.true "Numbers differ" (sameNumbers (Solver.solve board) solvedBoard)
+            , test "Solver solves a board with forty-seven empty fields that needs backtracking" <|
                 \_ ->
                     let
                         board =
                             Board.fromNotation ".......462..5........4.38..13.7.24..4..93.128.9..4.3.5.2.31..8.5.42..69..8.6.4..."
                     in
-                    Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
-            , test "BetterSolver solves a board with forty-eight empty fields that needs backtracking" <|
+                    Expect.true "Numbers differ" (sameNumbers (Solver.solve board) solvedBoard)
+            , test "Solver solves a board with forty-eight empty fields that needs backtracking" <|
                 \_ ->
                     let
                         board =
                             Board.fromNotation ".......462..5........4.38..13.7.24..4..93.12..9..4.3.5.2.31..8.5.42..69..8.6.4..."
                     in
-                    Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
+                    Expect.true "Numbers differ" (sameNumbers (Solver.solve board) solvedBoard)
             , test "solves a given solvable board from https://www.sudoku-solutions.com" <|
                 \_ ->
                     let
                         board =
                             Board.fromNotation "....9......8....3767.4..8...3..8246...........9214..7...6..9.8451....6......5...."
                     in
-                    Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
+                    Expect.true "Numbers differ" (sameNumbers (Solver.solve board) solvedBoard)
             , test "solves a given easy solvable board from https://www.sudoku-solutions.com" <|
                 \_ ->
                     let
@@ -116,7 +116,7 @@ suite =
                     Expect.true
                         "Numbers differ"
                         (sameNumbers
-                            (BetterSolver.solve board)
+                            (Solver.solve board)
                             (Board.fromNotation "749831526526497183183265749978123654654789312312546978467918235235674891891352467")
                         )
             , test "solves a second given easy solvable board from https://www.sudoku-solutions.com" <|
@@ -129,7 +129,7 @@ suite =
                     Expect.true
                         "Numbers differ"
                         (sameNumbers
-                            (BetterSolver.solve board)
+                            (Solver.solve board)
                             (Board.fromNotation "596184723832756419174923685615247938943568172728391546467839251289415367351672894")
                         )
             , test "solves a given simple solvable board from https://www.sudoku-solutions.com" <|
@@ -140,7 +140,7 @@ suite =
                     in
                     Expect.true "Numbers differ"
                         (sameNumbers
-                            (BetterSolver.solve board)
+                            (Solver.solve board)
                             (Board.fromNotation "479831652158462793632579148785613924213947865946285371867354219324196587591728436")
                         )
             , test "solves a given medium solvable board from https://www.sudoku-solutions.com" <|
@@ -150,7 +150,7 @@ suite =
                             Board.fromNotation "94.1.3..2.5....6432.37...1...98....4.2.....6.6....72...1...94....5....2.8..6.1.5."
                     in
                     Expect.true "Numbers differ"
-                        (sameNumbers (BetterSolver.solve board)
+                        (sameNumbers (Solver.solve board)
                             (Board.fromNotation "946153872157298643283746519579862134421935768638417295312579486765384921894621357")
                         )
             ]

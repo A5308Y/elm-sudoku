@@ -1,13 +1,13 @@
 module Main exposing (..)
 
 import Array
-import BetterSolver
 import Board
 import Char
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Keyboard
+import Solver
 import Types exposing (..)
 
 
@@ -201,7 +201,7 @@ update msg model =
             let
                 updatedBoard =
                     board
-                        |> BetterSolver.solve
+                        |> Solver.solve
             in
             ( { model | board = updatedBoard }, Cmd.none )
 

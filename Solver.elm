@@ -1,4 +1,4 @@
-module BetterSolver exposing (possibleNumbersForIndex, solve)
+module Solver exposing (possibleNumbersForIndex, solve)
 
 import Array
 import Backtracker exposing (backtrack)
