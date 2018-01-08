@@ -22,6 +22,15 @@ suite =
                     in
                     Expect.equalLists (Solver.possibleNumbersForIndex board 0) [ Three ]
             ]
+        , describe ".isImpossible"
+            [ test "returns True for a board with an error" <|
+                \_ ->
+                    let
+                        board =
+                            Board.fromNotation "11..............................................................................."
+                    in
+                    Expect.equal True (Solver.isImpossible board)
+            ]
         , describe ".solve"
             [ test "Solver solves a board with one empty field" <|
                 \_ ->

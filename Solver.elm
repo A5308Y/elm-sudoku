@@ -1,4 +1,4 @@
-module Solver exposing (possibleNumbersForIndex, solve)
+module Solver exposing (isImpossible, possibleNumbersForIndex, solve)
 
 import Array
 import Backtracker exposing (backtrack)
@@ -11,7 +11,7 @@ solve board =
     if isSolution board then
         convertTryingToPrefilled board
     else if isImpossible board then
-        board
+        Array.repeat 81 Impossible
     else
         case findNextEmptyEntry board of
             Nothing ->
@@ -71,9 +71,11 @@ isSolution board =
 
 isImpossible : Board -> Bool
 isImpossible board =
-    board
+    (board
         |> Array.toList
         |> List.all impossibleFilter
+    )
+        || Board.hasError board
 
 
 impossibleFilter : FieldState -> Bool

@@ -7,6 +7,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Keyboard
+import Random
 import Solver
 import Types exposing (..)
 
@@ -35,6 +36,7 @@ view model =
         , button [ onClick (LoadBoard Board.simple) ] [ text "Simple" ]
         , button [ onClick (LoadBoard Board.easy) ] [ text "Easy" ]
         , button [ onClick (LoadBoard Board.hard) ] [ text "Hard" ]
+        , button [ onClick GenerateBoard ] [ text "Random" ]
         , div [] (Array.toList (Array.indexedMap (renderField model) model.board))
         ]
 
@@ -174,6 +176,8 @@ type Msg
     | Clear
     | KeyPressed Char
     | LoadBoard Board
+    | GenerateBoard
+    | LoadRandomBoard (List ( Int, Int ))
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -185,6 +189,16 @@ update msg model =
     case msg of
         LoadBoard board ->
             ( { model | board = board }, Cmd.none )
+
+        GenerateBoard ->
+            let
+                numbersGenerator =
+                    Random.list 10 (Random.pair (Random.int 0 80) (Random.int 1 9))
+            in
+            ( model, Random.generate LoadRandomBoard numbersGenerator )
+
+        LoadRandomBoard data ->
+            ( { model | board = Board.loadRandom data }, Cmd.none )
 
         KeyPressed char ->
             case model.editing of

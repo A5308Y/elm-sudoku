@@ -9,20 +9,39 @@ empty =
     Array.repeat 81 Empty
 
 
-fromNotation : String -> Board
-fromNotation boardCode =
-    boardCode
-        |> String.toList
-        |> Array.fromList
-        |> Array.map charToFieldState
+loadRandom : List ( Int, Int ) -> Board
+loadRandom data =
+    data
+        |> numberForPosition
+        |> Array.initialize 81
 
 
-toNotation : Board -> String
-toNotation board =
-    board
-        |> Array.map fieldStateToString
-        |> Array.toList
-        |> String.concat
+numberForPosition : List ( Int, Int ) -> Int -> FieldState
+numberForPosition data givenIndex =
+    case numberForPositionOfData data givenIndex of
+        Nothing ->
+            Empty
+
+        Just ( position, number ) ->
+            case intToNumber number of
+                Nothing ->
+                    Empty
+
+                Just number ->
+                    PreFilled number
+
+
+numberForPositionOfData data givenIndex =
+    data
+        |> List.filter (\( position, number ) -> position == givenIndex)
+        |> List.head
+
+
+
+--10 zufällige Zahlen
+--    |> solve
+--    |> remove 24 random numbers
+--    |> ensure only one solution is possible
 
 
 simple : Board
@@ -38,6 +57,22 @@ easy =
 hard : Board
 hard =
     fromNotation ".6..4..7....2..15....9.......9..4.82.........72.6..4....71.89...42..7....5..6..2."
+
+
+fromNotation : String -> Board
+fromNotation boardCode =
+    boardCode
+        |> String.toList
+        |> Array.fromList
+        |> Array.map charToFieldState
+
+
+toNotation : Board -> String
+toNotation board =
+    board
+        |> Array.map fieldStateToString
+        |> Array.toList
+        |> String.concat
 
 
 charToFieldState : Char -> FieldState
@@ -103,6 +138,40 @@ charToNumber char =
             Nothing
 
 
+intToNumber : Int -> Maybe Number
+intToNumber integer =
+    case integer of
+        1 ->
+            Just One
+
+        2 ->
+            Just Two
+
+        3 ->
+            Just Three
+
+        4 ->
+            Just Four
+
+        5 ->
+            Just Five
+
+        6 ->
+            Just Six
+
+        7 ->
+            Just Seven
+
+        8 ->
+            Just Eight
+
+        9 ->
+            Just Nine
+
+        _ ->
+            Nothing
+
+
 numberToString : Number -> String
 numberToString number =
     case number of
@@ -140,6 +209,14 @@ errors board =
         |> Array.indexedMap (indexHasError board)
 
 
+hasError : Board -> Bool
+hasError board =
+    board
+        |> errors
+        |> Array.toList
+        |> List.any identity
+
+
 getFieldState : Board -> Int -> Maybe Number
 getFieldState board index =
     case Array.get index board of
@@ -168,6 +245,11 @@ indexHasError : Board -> Int -> FieldState -> Bool
 indexHasError board index state =
     case state of
         UserFilled number ->
+            board
+                |> numbersToCheck index
+                |> List.member number
+
+        PreFilled number ->
             board
                 |> numbersToCheck index
                 |> List.member number
