@@ -4,6 +4,7 @@ import Array
 import Types exposing (..)
 
 
+backtrack : Board -> Int -> Board
 backtrack board index =
     let
         maybeFirstTryingEntry =
@@ -43,8 +44,8 @@ tryNextEntry board ( index, tryEntry ) =
 
 
 tryingFilter : ( Int, FieldState ) -> Bool
-tryingFilter ( index, entry ) =
-    case entry of
+tryingFilter ( index, field ) =
+    case field of
         Trying _ otherPossibleNumbers ->
             True
 
@@ -52,14 +53,16 @@ tryingFilter ( index, entry ) =
             False
 
 
+convertImpossibleToEmpty : Board -> Board
 convertImpossibleToEmpty board =
-    Array.map
-        (\entry ->
-            case entry of
-                Impossible ->
-                    Empty
+    Array.map emptyToImpossibleConverter board
 
-                _ ->
-                    entry
-        )
-        board
+
+emptyToImpossibleConverter : FieldState -> FieldState
+emptyToImpossibleConverter field =
+    case field of
+        Impossible ->
+            Empty
+
+        _ ->
+            field

@@ -6,7 +6,6 @@ import Board
 import Dict
 import Expect exposing (Expectation)
 import Fuzz exposing (Fuzzer, int, list, string)
-import Solver
 import Test exposing (..)
 import Types exposing (..)
 
@@ -66,13 +65,6 @@ suite =
                             Board.fromNotation ".......4624.56.......4.38..13.7.246.46793.128.9214.3.572.319.845.427.69.98.6.4..."
                     in
                     Expect.true "Numbers differ" (sameNumbers (BetterSolver.solve board) solvedBoard)
-            , test "Solver does not solves a board with thirty-five empty fields that needs backtracking" <|
-                \_ ->
-                    let
-                        board =
-                            Board.fromNotation ".......4624.56.......4.38..13.7.246.46793.128.9214.3.572.319.845.427.69.98.6.4..."
-                    in
-                    Expect.false "Numbers the same" (sameNumbers (Solver.solveBoard board) solvedBoard)
             , test "BetterSolver solves a board with forty empty fields that needs backtracking" <|
                 \_ ->
                     let

@@ -19,12 +19,14 @@ solve board =
 
             Just ( index, entry ) ->
                 if entry == Impossible then
-                    backtrack board (index - 1)
+                    (index - 1)
+                        |> backtrack board
                         |> solve
                 else
                     case possibleNumbersForIndex board index of
                         [] ->
-                            backtrack board index
+                            index
+                                |> backtrack board
                                 |> solve
 
                         firstPossibleNumber :: otherPossibleNumbers ->
@@ -35,16 +37,7 @@ solve board =
 
 convertTryingToPrefilled : Board -> Board
 convertTryingToPrefilled board =
-    Array.map
-        (\entry ->
-            case entry of
-                Trying number _ ->
-                    PreFilled number
-
-                _ ->
-                    entry
-        )
-        board
+    Array.map tryingToPrefilledConverter board
 
 
 findNextEmptyEntry : Board -> Maybe ( Int, FieldState )
@@ -109,9 +102,19 @@ fieldSolvedFilter field =
             False
 
 
+tryingToPrefilledConverter : FieldState -> FieldState
+tryingToPrefilledConverter field =
+    case field of
+        Trying number _ ->
+            PreFilled number
+
+        _ ->
+            field
+
+
 possibleNumbersForIndex : Board -> Int -> List Number
 possibleNumbersForIndex board index =
-    validEntries
+    validNumbers
         |> List.filter (numberPossible board index)
 
 
@@ -120,6 +123,6 @@ numberPossible board index number =
     not <| List.member number (Board.numbersToCheck index board)
 
 
-validEntries : List Number
-validEntries =
+validNumbers : List Number
+validNumbers =
     [ One, Two, Three, Four, Five, Six, Seven, Eight, Nine ]
